@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application</title>
+</head>
+<body>
+    <h1>Welcome to the Chat Application</h1>
+    <form action="/create" method="POST">
+        <button type="submit">Create a New Chat Room</button>
+    </form>
+    <form action="/enter" method="POST">
+        <label for="chat_code">Enter a Chat Code:</label>
+        <input type="text" id="chat_code" name="chat_code" required>
+        <button type="submit">Enter Chat Room</button>
+    </form>
+</body>
+</html>
