@@ -4,16 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat Application</title>
+    <!-- Add Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>Welcome to the Chat Application</h1>
-    <form action="/create" method="POST">
-        <button type="submit">Create a New Chat Room</button>
-    </form>
-    <form action="/enter" method="POST">
-        <label for="chat_code">Enter a Chat Code:</label>
-        <input type="text" id="chat_code" name="chat_code" required>
-        <button type="submit">Enter Chat Room</button>
-    </form>
+    <div class="container">
+        <h1 class="mt-5">Welcome to the Chat Application</h1>
+
+        {% if session.logged_in %}
+        <h2>Your Chat Room Codes:</h2>
+        <ul>
+            {% for chat_code, chat_data in chat_rooms.items() if chat_data.creator_email == session.email %}
+            <li>Chat Room Code: {{ chat_code }}</li>
+            {% endfor %}
+        </ul>
+        <form action="/create" method="POST">
+            <button class="btn btn-primary" type="submit">Create a New Chat Room</button>
+        </form>
+        <form action="/enter" method="POST">
+            <div class="form-group">
+                <label for="chat_code">Enter a Chat Code:</label>
+                <input type="text" id="chat_code" name="chat_code" class="form-control" required>
+            </div>
+            <button class="btn btn-success" type="submit">Enter Chat Room</button>
+        </form>
+        <a href="/logout" class="btn btn-danger mt-3">Logout</a>
+        {% else %}
+        <p>Please <a href="/login">login</a> or <a href="/register">register</a> to create or join chat rooms.</p>
+        {% endif %}
+    </div>
+
+    <!-- Add Bootstrap JavaScript (optional, only needed for some components) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

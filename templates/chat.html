@@ -4,24 +4,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat Room {{ chat_code }}</title>
+    <!-- Add Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>Chat Room {{ chat_code }}</h1>
-    <form action="/chat/{{ chat_code }}" method="POST">
-        <label for="message">Message:</label>
-        <input type="text" id="message" name="message" required>
-        <button type="submit">Send</button>
-    </form>
-    <h2>Messages:</h2>
-    <ul>
-        {% for message in messages %}
-        <li>
-            <strong>{{ message.sender }}:</strong>
-            {{ message.message }}
-            <br>
-            <em>Encrypted:</em> {{ message.encrypted_message }}
-        </li>
-        {% endfor %}
-    </ul>
+    <div class="container">
+        <h1 class="mt-5">Chat Room {{ chat_code }}</h1>
+        <a href="/logout" class="btn btn-danger">Logout</a>
+
+        <form id="message-form" class="mt-3">
+            <div class="form-group">
+                <label for="message">Message:</label>
+                <input type="text" id="message" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+        <h2 class="mt-3">Messages:</h2>
+        <ul id="messages" class="list-group">
+            {% for message in messages %}
+            <li class="list-group-item">
+                <strong>{{ message.sender }}:</strong>
+                {{ message.message }}
+                <br>
+                <em>Encrypted:</em> {{ message.encrypted_message }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Add Bootstrap JavaScript (optional, only needed for some components) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+    
+        socket.on('connect', function() {
+            var form = document.querySelector('#message-form');
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                var messageInput = document.querySelector('#message');
+                var message = messageInput.value;
+                socket.emit('send_message', {'chat_code': '{{ chat_code }}', 'message': message});
+                messageInput.value = '';
+            });
+        });
+    
+        socket.on('update_messages', function(messages) {
+            var messagesList = document.querySelector('#messages');
+            messagesList.innerHTML = '';
+            messages.forEach(function(message) {
+                var li = document.createElement('li');
+                li.innerHTML = '<strong>' + message.sender + ':</strong> ' + message.message + '<br><em>Encrypted:</em> ' + arrayBufferToString(message.encrypted_message);
+                messagesList.appendChild(li);
+            });
+        });
+    
+        function arrayBufferToString(buffer) {
+            var view = new Uint8Array(buffer);
+            var result = '';
+            for (var i = 0; i < view.length; i++) {
+                result += String.fromCharCode(view[i]);
+            }
+            return result;
+        }
+    </script>
 </body>
 </html>
