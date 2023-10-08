@@ -7,6 +7,7 @@
     <!-- Add Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
+
 <body>
     <div class="container">
         <h1 class="mt-5">Chat Room {{ chat_code }}</h1>
@@ -19,17 +20,20 @@
             </div>
             <button type="submit" class="btn btn-primary">Send</button>
         </form>
-        <h2 class="mt-3">Messages:</h2>
+        <h2>Messages:</h2>
         <ul id="messages" class="list-group">
             {% for message in messages %}
             <li class="list-group-item">
-                <strong>{{ message.sender }}:</strong>
+                <strong>{{ message.sender }}:</strong> <!-- Display sender's username -->
                 {{ message.message }}
                 <br>
-                <em>Encrypted:</em> {{ message.encrypted_message }}
-            </li>
+                <em>Caesar Cipher Encrypted:</em> {{ message.encrypted_message_caesar }}
+                <br>
+                <em>RSA Encrypted:</em> {{ message.encrypted_message_rsa | safe }}
+            </li>            
             {% endfor %}
         </ul>
+
     </div>
 
     <!-- Add Bootstrap JavaScript (optional, only needed for some components) -->
@@ -57,10 +61,13 @@
             messagesList.innerHTML = '';
             messages.forEach(function(message) {
                 var li = document.createElement('li');
-                li.innerHTML = '<strong>' + message.sender + ':</strong> ' + message.message + '<br><em>Encrypted:</em> ' + arrayBufferToString(message.encrypted_message);
+                li.innerHTML = '<strong>' + message.sender + ':</strong> ' + message.message +
+                    '<br><em>Caesar Cipher Encrypted:</em> ' + message.encrypted_message_caesar +
+                    '<br><em>RSA Encrypted:</em> ' + arrayBufferToString(message.encrypted_message_rsa);
                 messagesList.appendChild(li);
             });
         });
+
     
         function arrayBufferToString(buffer) {
             var view = new Uint8Array(buffer);
