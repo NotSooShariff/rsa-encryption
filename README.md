@@ -1,6 +1,6 @@
 # RSA Encryption and Chat Application (Test)
 
-This is a simple Flask application that demonstrates the use of RSA encryption for secure communication. However, please note that this is not meant to be a secure implementation or a suitable foundation for a production chat application. It lacks proper user authentication and user management. User emails and passwords are hard-coded for demonstration purposes only.
+This is a simple Flask application that I wrote which demonstrates the use of RSA encryption for secure communication just to play around with python libraries. However, please note that this is not meant to be a secure implementation or a suitable foundation for a production chat application. It lacks proper user authentication and user management. User emails and passwords are hard-coded for demonstration purposes only.
 
 ## ⚒️ Installation and Setup
 
